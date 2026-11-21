@@ -1,0 +1,13 @@
+.app{
+    padding: 10px;
+    font-family:Tahoma, sans-serif;
+    max-width: 800px;
+    margin: auto;
+    text-align: center;
+}
+.title{
+    padding: 30px;
+    background-color: #35BCFF;
+    display: inline-block;
+    border-radius: 100%;
+}
