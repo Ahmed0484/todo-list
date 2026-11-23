@@ -1,47 +1,32 @@
-import { useState } from 'react'
+import { useReducer, useState } from 'react'
 import './App.css'
 import TaskControls from './components/TaskControls'
 import TaskForm from './components/TaskForm'
 import TaskList from './components/TaskList/TaskList'
 import type { Task } from './types/task'
 import type { EditTask } from './types/editTask'
-import { getStoredTasks, updateLocalStorage } from './utils/localStorageUtil'
+import { getStoredTasks } from './utils/localStorageUtil'
+import { taskReducer } from './reducers/taskReducer'
 export default function App() {
-  const [tasks, setTasks] = useState<Task[]>(getStoredTasks());
+  const [tasks, dispatch] = useReducer(taskReducer, getStoredTasks());
   const [showOnlyIncomplete, setShowOnlyIncomplete] = useState(false);
   const sortTasks = () => {
-    const sortedTasks = [...tasks]
-      .sort((a, b) => a.priority - b.priority);
-    setTasks(sortedTasks);
-    updateLocalStorage(sortedTasks);
+    dispatch({ type: "SORT" });
   };
   const addTask = (newTask: Task) => {
-    const updatedTasks = [...tasks, newTask];
-    setTasks(updatedTasks);
-    updateLocalStorage(updatedTasks);
+    dispatch({ type: "ADD", payload: newTask });
   };
   const toggleTaskDone = (id: number) => {
-    const updatedTasks = tasks.map((task) =>
-      task.id === id ? { ...task, done: !task.done } : task
-    );
-    setTasks(updatedTasks);
-    updateLocalStorage(updatedTasks);
+     dispatch({ type: "TOGGLE_DONE", payload: id });
   };
   const deleteTask = (id: number) => {
-    const updatedTasks = tasks.filter((task) =>
-      task.id !== id 
-    );
-    setTasks(updatedTasks);
-    updateLocalStorage(updatedTasks);
+    dispatch({ type: "REMOVE", payload: id });
   };
   const updateTask = (editTask:EditTask) => {
-    const updatedTasks = tasks.map((task) =>
-      task.id === editTask.id ?
-        { ...task, text: editTask.text, priority: editTask.priority }
-        : task
-    );
-    setTasks(updatedTasks);
-    updateLocalStorage(updatedTasks);
+    const id= editTask.id
+    const text = editTask.text
+    const priority = editTask.priority
+    dispatch({ type: "UPDATE", payload: {id, text, priority } });
   };
   return (
     <div className="app">
