@@ -1,7 +1,9 @@
 import { Pencil, Trash } from "lucide-react"
 import type { Task } from "../../types/task"
+import { useTaskActions } from "../../contexts/TaskContext"
 
-export default function TaskItem({ task, toggleTaskDone, deleteTask, setEditingTaskId }: Props) {
+export default function TaskItem({ task,setEditingTaskId }: Props) {
+  const {toggleTaskDone, deleteTask} = useTaskActions()
   return (
     <>
       <div style={{ display: "flex", alignItems: "center", flexGrow: 1 }}>
@@ -65,7 +67,5 @@ export default function TaskItem({ task, toggleTaskDone, deleteTask, setEditingT
 
 type Props = {
   task: Task
-  toggleTaskDone: (id: number) => void
-  deleteTask: (id: number) => void
   setEditingTaskId: (id: number|null) => void
 }

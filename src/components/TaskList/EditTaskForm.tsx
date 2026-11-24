@@ -1,8 +1,9 @@
 import { useState } from "react";
-import type { EditTask } from "../../types/editTask";
 import type { Task } from "../../types/task";
+import { useTaskActions } from "../../contexts/TaskContext";
 
-export default function EditTaskForm({ task, setEditingTaskId, updateTask }:Props) {
+export default function EditTaskForm({ task, setEditingTaskId}:Props) {
+  const {updateTask} = useTaskActions();
   const [editText, setEditText] = useState(task.text);
   const [editPriority, setEditPriority] = useState(task.priority);
 
@@ -60,5 +61,4 @@ export default function EditTaskForm({ task, setEditingTaskId, updateTask }:Prop
 type Props={ 
   task:Task
   setEditingTaskId:(id:number|null)=>void
-  updateTask:(editTask:EditTask)=>void
  }

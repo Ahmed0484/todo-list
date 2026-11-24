@@ -7,6 +7,7 @@ import type { Task } from './types/task'
 import type { EditTask } from './types/editTask'
 import { getStoredTasks } from './utils/localStorageUtil'
 import { taskReducer } from './reducers/taskReducer'
+import { TaskContext } from './contexts/TaskContext'
 export default function App() {
   const [tasks, dispatch] = useReducer(taskReducer, getStoredTasks());
   const [showOnlyIncomplete, setShowOnlyIncomplete] = useState(false);
@@ -17,16 +18,16 @@ export default function App() {
     dispatch({ type: "ADD", payload: newTask });
   };
   const toggleTaskDone = (id: number) => {
-     dispatch({ type: "TOGGLE_DONE", payload: id });
+    dispatch({ type: "TOGGLE_DONE", payload: id });
   };
   const deleteTask = (id: number) => {
     dispatch({ type: "REMOVE", payload: id });
   };
-  const updateTask = (editTask:EditTask) => {
-    const id= editTask.id
+  const updateTask = (editTask: EditTask) => {
+    const id = editTask.id
     const text = editTask.text
     const priority = editTask.priority
-    dispatch({ type: "UPDATE", payload: {id, text, priority } });
+    dispatch({ type: "UPDATE", payload: { id, text, priority } });
   };
   return (
     <div className="app">
@@ -36,12 +37,16 @@ export default function App() {
         showOnlyIncomplete={showOnlyIncomplete}
         setShowOnlyIncomplete={setShowOnlyIncomplete}
         sortTasks={sortTasks} />
-      <TaskList tasks={tasks}
-        showOnlyIncomplete={showOnlyIncomplete}
-        toggleTaskDone={toggleTaskDone}
-        deleteTask={deleteTask}
-        updateTask={updateTask}
-      />
+      <TaskContext.Provider value={{toggleTaskDone,deleteTask,updateTask}}>
+        <TaskList tasks={tasks}
+          showOnlyIncomplete={showOnlyIncomplete} />
+      </TaskContext.Provider>
     </div>
   )
+}
+
+export type TaskContextType ={
+  toggleTaskDone: (id: number) => void;
+  deleteTask: (id: number) => void;
+  updateTask: (editTask: EditTask) => void;
 }
